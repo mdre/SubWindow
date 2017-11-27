@@ -1,0 +1,14 @@
+<module>
+
+	<!-- WS Compiler: manually edited -->
+
+	<!-- Inherit DefaultWidgetSet -->
+	<inherits name="com.vaadin.DefaultWidgetSet" /> 
+
+	<!-- Widget styles in public -directory -->
+	<stylesheet src="subwindow/styles.css"/>
+
+<!--        <inherits name="com.google.gwt.logging.Logging"/>
+        <set-property name="gwt.logging.simpleRemoteHandler" value="ENABLED" />
+        <set-configuration-property name="devModeRedirectEnabled" value="true" />-->
+</module>

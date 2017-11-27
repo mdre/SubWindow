@@ -1,0 +1,12 @@
+
+@import "../valo/valo.scss";
+
+@mixin subwindow {
+    @include valo;
+    // your styles go here
+    .v-subwindow .v-window {
+            position: relative !important;
+    }
+}
+
+

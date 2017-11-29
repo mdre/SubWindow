@@ -16,6 +16,7 @@ import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.VerticalSplitPanel;
 import com.vaadin.ui.Window;
+import net.awesomecontrols.subwindow.SubWindowDesktop;
 
 @Theme("demo")
 @Title("SubWindow Add-on Demo")
@@ -46,6 +47,12 @@ public class DemoUI extends UI
         w.setContent(pw);
         
         this.addWindow(w);
+        
+        Window w2 = new Window("Window 2");
+        w2.setWidth("300px");
+        w2.setHeight("200px");
+        
+        this.addWindow(w2);
         
         
         
@@ -86,21 +93,21 @@ public class DemoUI extends UI
         p2.setContent(vl2);
         
         subw2.setContent(p2);
-        
+        subw2.setPosition(50, 60);
         
         
         
         
         // Show it in the middle of the screen
-        final AbsoluteLayout layout = new AbsoluteLayout();
-        layout.setStyleName("demoContentLayout");
-        layout.setSizeFull();
+        SubWindowDesktop swd = new SubWindowDesktop();
+        
+        swd.setSizeFull();
 //        layout.setMargin(false);
 //        layout.setSpacing(false);
-        layout.addComponent(subw);
-        layout.addComponent(subw2);
+        swd.addSubWindow(subw);
+        swd.addSubWindow(subw2);
         
-        VerticalSplitPanel hsp = new VerticalSplitPanel(superior,layout);
+        VerticalSplitPanel hsp = new VerticalSplitPanel(superior,swd);
         hsp.setSplitPosition(200, Unit.PIXELS);
         
 //        layout.setComponentAlignment(component, Alignment.MIDDLE_CENTER);

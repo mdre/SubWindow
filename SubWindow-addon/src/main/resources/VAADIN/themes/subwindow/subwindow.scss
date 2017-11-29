@@ -7,7 +7,8 @@ De acá para abajo casi anda.
     // your styles go here
     .v-subwindow {
         @extend .v-window;
-        position: relative !important;
+        position: absolute !important;
+        background: blue;
     }
     
     .v-subwindow-noheader {

@@ -14781,7 +14781,8 @@ div.v-layout.v-horizontal.v-widget {
 }
 
 .demo .v-subwindow {
-	position: relative !important;
+	position: absolute !important;
+	background: blue;
 }
 
 .demo .v-subwindow-noheader .v-subwindow-outerheader {
@@ -14790,12 +14791,4 @@ div.v-layout.v-horizontal.v-widget {
 
 .demo .v-subwindow > .popupContent, .demo .v-subwindow-wrap, .demo .v-subwindow-contents, .demo .v-subwindow-contents > .v-scrollable {
 	height: 100%;
-}
-
-.demo .demoContentLayout {
-	background-color: #d1d1cf;
-	background-image: url(images/radial-gradient.png);
-	background-size: 90%;
-	background-position: center center;
-	background-repeat: no-repeat;
 }

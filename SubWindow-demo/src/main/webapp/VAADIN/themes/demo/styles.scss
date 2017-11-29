@@ -1,6 +1,6 @@
 @import "../valo/valo.scss";
 @import "../subwindow/subwindow.scss";
-@import "addons.scss";
+/*@import "addons.scss";*/
 
 $gray: #d1d1cf;
 $green: #40b527;
@@ -12,17 +12,17 @@ $darkgreen: darken($green, 30%);
 	// Include valo theme styles in your theme
 	@include valo;
         @include subwindow;
-        @include addons;
+        /*@include addons;*/
         
         
 	// You can style your demo app right here
-	.demoContentLayout {
+/*	.demoContentLayout {
 		background-color: $gray;
 		background-image: url(images/radial-gradient.png);
 		background-size: 90%;
 		background-position: center center;
 		background-repeat: no-repeat;
-	}
+	}*/
 	
 /*	// You can also customize your component for the demo
 	// app, but remember that these styles are not part of

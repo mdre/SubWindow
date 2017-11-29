@@ -6,9 +6,31 @@
 	<inherits name="com.vaadin.DefaultWidgetSet" /> 
 
 	<!-- Widget styles in public -directory -->
-	<stylesheet src="subwindow/styles.css"/>
+	<stylesheet src="subwindow/styles.scss"/>
 
-<!--        <inherits name="com.google.gwt.logging.Logging"/>
-        <set-property name="gwt.logging.simpleRemoteHandler" value="ENABLED" />
-        <set-configuration-property name="devModeRedirectEnabled" value="true" />-->
+        <inherits name="com.google.gwt.logging.Logging"/>
+<!--        <set-property name="gwt.logging.simpleRemoteHandler" value="ENABLED" />
+        <set-property name="gwt.logging.logLevel" value="FINEST"/>
+        <set-property name="gwt.logging.enabled" value="TRUE"/>
+        <set-property name="gwt.logging.consoleHandler" value="ENABLED" />
+        <set-property name="gwt.logging.popupHandler" value="DISABLED" />
+        -->
+        
+        <!-- This handler sends log messages to the server, where they will be logged using the server side logging mechanism. -->     
+        <!--<set-property name="gwt.logging.simpleRemoteHandler" value="ENABLED" />-->  
+        <!-- Logs by calling method GWT.log. These messages can only be seen in Development Mode in the DevMode window. -->
+        <set-property name="gwt.logging.developmentModeHandler" value="ENABLED" />  
+        <!-- These messages can only be seen in Development Mode in the DevMode window. -->
+        <set-property name="gwt.logging.systemHandler" value="ENABLED" />
+        <!-- Logs to the popup which resides in the upper left hand corner of application when this handler is enabled. -->
+        <!--<set-property name="gwt.logging.popupHandler" value="ENABLED" />-->
+        <!-- Logs to the javascript console, which is used by Firebug Lite (for IE), Safari and Chrome. -->
+        <set-property name="gwt.logging.consoleHandler" value="ENABLED"/> 
+        <!-- Logs to the firebug console. -->
+<!--        <set-property name="gwt.logging.firebugHandler" value="ENABLED" /> -->
+        
+        
+        
+        
+        <set-configuration-property name="devModeRedirectEnabled" value="true" />
 </module>

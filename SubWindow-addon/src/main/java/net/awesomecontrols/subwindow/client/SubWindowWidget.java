@@ -63,7 +63,7 @@ public class SubWindowWidget extends VOverlay implements ShortcutActionHandler.S
     static {
         LOGGER.setLevel(Level.INFO);
     }
-
+    
     private static List<SubWindowWidget> windowOrder = new ArrayList<>();
 
     private static HandlerManager WINDOW_ORDER_HANDLER = new HandlerManager(SubWindowWidget.class);
@@ -317,6 +317,7 @@ public class SubWindowWidget extends VOverlay implements ShortcutActionHandler.S
     public void setWindowOrderAndPosition() {
         // This cannot be done in the constructor as the widgets are created in
         // a different order than on they should appear on screen
+        LOGGER.log(Level.INFO, "windowOrder.size: "+windowOrder.size());
         if (windowOrder.contains(this)) {
             // Already set
             return;
@@ -326,6 +327,7 @@ public class SubWindowWidget extends VOverlay implements ShortcutActionHandler.S
         windowOrder.add(this);
         setPopupPosition(order * STACKING_OFFSET_PIXELS, order * STACKING_OFFSET_PIXELS);
         doFireOrderEvent();
+        LOGGER.log(Level.INFO, "windowOrder.size: "+windowOrder.size());
     }
 
     private void setWindowOrder(int order) {

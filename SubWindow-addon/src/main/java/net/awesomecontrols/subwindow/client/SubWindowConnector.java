@@ -282,8 +282,7 @@ public class SubWindowConnector extends AbstractSingleComponentContainerConnecto
             // have to replace them with stubs in the clone. And we can't just
             // erase them, because there are corresponding player widgets to
             // animate
-            windowClone = cloneNodeFilteringMedia(
-                    getWidget().getElement().getFirstChild());
+            windowClone = cloneNodeFilteringMedia(getWidget().getElement().getFirstChild());
         }
     }
 

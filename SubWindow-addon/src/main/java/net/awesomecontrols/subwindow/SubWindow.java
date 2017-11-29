@@ -67,6 +67,7 @@ public class SubWindow extends Panel
             if (y != getState(false).positionY) {
                 setPositionY(y);
             }
+            LOGGER.log(Level.INFO, "Moved to: "+x+","+y);
         }
     };
 
@@ -138,12 +139,13 @@ public class SubWindow extends Panel
      */
     @Override
     public void setParent(HasComponents parent) {
-//        if (parent == null) {
+        // el parent debe ser SubWindowDestop.VerticalLayout
+        if (parent == null || parent.getParent() instanceof SubWindowDesktop) {
             super.setParent(parent);
-//        } else {
-//            throw new IllegalArgumentException(
-//                    "A Window must have a parent");
-//        }
+        } else {
+            throw new IllegalArgumentException(
+                    "A Window must have a SubWindowDesktop");
+        }
     }
 
     /*
@@ -218,7 +220,7 @@ public class SubWindow extends Panel
      * </p>
      */
     public void close() {
-        // FIXME: acá hay que modificar el código
+        // FIXME: CLOSE acá hay que modificar el código
 //        UI uI = getUI();
 //
 //        // Don't do anything if not attached to a UI
@@ -667,27 +669,27 @@ public class SubWindow extends Panel
      * <p>
      */
     public void bringToFront() {
-        //FIXME: solucionar este método
-        
-//        UI uI = getUI();
-//        if (uI == null) {
-//            throw new IllegalStateException(
-//                    "Window must be attached to parent before calling bringToFront method.");
-//        }
-//        int maxBringToFront = -1;
-//        for (SubWindow w : uI.getWindows()) {
-//            if (!isModal() && w.isModal()) {
-//                throw new IllegalStateException(
-//                        "The UI contains modal windows, non-modal window cannot be brought to front.");
-//            }
-//            if (w.bringToFront != null) {
-//                maxBringToFront = Math.max(maxBringToFront,
-//                        w.bringToFront.intValue());
-//            }
-//        }
-//        bringToFront = Integer.valueOf(maxBringToFront + 1);
-//        markAsDirty();
-
+        //FIXME: bringToFront solucionar este método
+        LOGGER.log(Level.INFO, "bring to front========================");
+        if (this.getParent() == null) {
+            throw new IllegalStateException(
+                    "Window must be attached to parent before calling bringToFront method.");
+        }
+        int maxBringToFront = -1;
+        for (SubWindow w : ((SubWindowDesktop)this.getParent()).getWindows()) {
+            if (!isModal() && w.isModal()) {
+                throw new IllegalStateException(
+                        "The UI contains modal windows, non-modal window cannot be brought to front.");
+            }
+            if (w.bringToFront != null) {
+                maxBringToFront = Math.max(maxBringToFront,
+                        w.bringToFront.intValue());
+            }
+        }
+        bringToFront = Integer.valueOf(maxBringToFront + 1);
+        LOGGER.log(Level.INFO, "bringToFront: "+bringToFront);
+        LOGGER.log(Level.INFO, "=============================================");
+        markAsDirty();
     }
 
     /**

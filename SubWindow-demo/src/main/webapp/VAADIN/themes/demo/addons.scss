@@ -1,0 +1,5 @@
+@import "../../addons/subwindow/subwindow.scss";
+
+@mixin addons {
+    @include subwindow;
+}

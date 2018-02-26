@@ -1,6 +1,6 @@
-@import "../valo/valo.scss";
-@import "../subwindow/subwindow.scss";
-/*@import "addons.scss";*/
+@import "demo.scss";
+@import "addons.scss";
+/*@import "../subwindow/subwindow.scss";*/
 
 $gray: #d1d1cf;
 $green: #40b527;
@@ -10,9 +10,8 @@ $darkgreen: darken($green, 30%);
 .demo {
 
 	// Include valo theme styles in your theme
-	@include valo;
-        @include subwindow;
-        /*@include addons;*/
+	@include demo;
+        @include addons;
         
         
 	// You can style your demo app right here

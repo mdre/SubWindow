@@ -9,7 +9,7 @@ import com.vaadin.annotations.Title;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
-import com.vaadin.ui.AbsoluteLayout;
+import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.UI;
@@ -107,10 +107,13 @@ public class DemoUI extends UI
         swd.addSubWindow(subw);
         swd.addSubWindow(subw2);
         
-        VerticalSplitPanel hsp = new VerticalSplitPanel(superior,swd);
+        HorizontalSplitPanel hsp = new HorizontalSplitPanel(new Panel(),swd);
         hsp.setSplitPosition(200, Unit.PIXELS);
         
+        VerticalSplitPanel vsp = new VerticalSplitPanel(superior,hsp);
+        vsp.setSplitPosition(200, Unit.PIXELS);
+        
 //        layout.setComponentAlignment(component, Alignment.MIDDLE_CENTER);
-        setContent(hsp);
+        setContent(vsp);
     }
 }

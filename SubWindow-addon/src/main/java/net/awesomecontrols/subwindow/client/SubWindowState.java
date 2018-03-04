@@ -18,6 +18,7 @@ package net.awesomecontrols.subwindow.client;
 
 import com.vaadin.shared.Connector;
 import com.vaadin.shared.annotations.NoLayout;
+import com.vaadin.shared.ui.composite.CompositeState;
 import com.vaadin.shared.ui.panel.PanelState;
 import com.vaadin.shared.ui.window.WindowMode;
 import com.vaadin.shared.ui.window.WindowRole;
@@ -33,36 +34,98 @@ public class SubWindowState extends PanelState {
         primaryStyleName = "v-subwindow";
     }
 
+    /**
+     *
+     */
     @NoLayout
     public boolean modal = false;
+
+    /**
+     *
+     */
     @NoLayout
     public boolean resizable = true;
+
+    /**
+     *
+     */
     @NoLayout
     public boolean resizeLazy = false;
+
+    /**
+     *
+     */
     @NoLayout
     public boolean draggable = true;
+
+    /**
+     *
+     */
     @NoLayout
     public boolean centered = false;
+
+    /**
+     *
+     */
     @NoLayout
     public boolean closable = true;
+
+    /**
+     *
+     */
     @NoLayout
     public int positionX = -1;
+
+    /**
+     *
+     */
     @NoLayout
     public int positionY = -1;
-    public WindowMode windowMode = WindowMode.NORMAL;
 
+    /**
+     *
+     */
+    public SubWindowMode windowMode = SubWindowMode.NORMAL;
+
+    /**
+     *
+     */
     @NoLayout
     public String assistivePrefix = "";
+
+    /**
+     *
+     */
     @NoLayout
     public String assistivePostfix = "";
+
+    /**
+     *
+     */
     @NoLayout
     public Connector[] contentDescription = new Connector[0];
+
+    /**
+     *
+     */
     @NoLayout
     public WindowRole role = WindowRole.DIALOG;
+
+    /**
+     *
+     */
     @NoLayout
     public boolean assistiveTabStop = false;
+
+    /**
+     *
+     */
     @NoLayout
     public String assistiveTabStopTopText = "Top of dialog";
+
+    /**
+     *
+     */
     @NoLayout
     public String assistiveTabStopBottomText = "Bottom of Dialog";
 }

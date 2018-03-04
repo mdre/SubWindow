@@ -16,11 +16,20 @@
 
 package net.awesomecontrols.subwindow;
 
+import com.vaadin.ui.Button;
+import net.awesomecontrols.subwindow.client.SubWindowDesktopState;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.Composite;
 import com.vaadin.ui.CssLayout;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.Window;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -29,46 +38,104 @@ import java.util.logging.Logger;
  *
  * @author Marcelo D. Ré {@literal <marcelo.re@gmail.com>}
  */
-public class SubWindowDesktop extends Panel {
+public class SubWindowDesktop extends Composite implements SubWindow.CloseListener {
     private final static Logger LOGGER = Logger.getLogger(SubWindowDesktop.class .getName());
     static {
         LOGGER.setLevel(Level.INFO);
     }
-    List<SubWindow> subwindows = new ArrayList<>();
 
-    private CssLayout layout = new CssLayout();
-    
+    private Panel desktopPanel = new Panel();
+    private WindowDesktopArea windowDesktopArea = new WindowDesktopArea();
+    HorizontalLayout openWindowsBar = new HorizontalLayout();
+    /**
+     * create an empty desktop
+     */
     public SubWindowDesktop() {
-        this.init();
-    }
-
-    public SubWindowDesktop(Component content) {
-        super(content);
-        this.init();
-    }
-
-    public SubWindowDesktop(String caption) {
-        super(caption);
-        this.init();
-    }
-
-    public SubWindowDesktop(String caption, Component content) {
-        super(caption, content);
         this.init();
     }
     
     private void init() {
-        layout.setSizeFull();
-        this.setContent(layout);
+        windowDesktopArea.setSizeFull();
+        
+        openWindowsBar.setHeight(50,Unit.PIXELS);
+        
+        VerticalLayout lyDesktop = new VerticalLayout();
+        lyDesktop.setSizeFull();
+        
+        lyDesktop.addComponent(windowDesktopArea);
+        lyDesktop.addComponent(openWindowsBar);
+        lyDesktop.setExpandRatio(windowDesktopArea, 1);
+        
+        desktopPanel.setContent(lyDesktop);
+        this.setCompositionRoot(desktopPanel);
     }
     
+    /**
+     * Add a subwindow to the desktop.
+     *
+     * @param sw
+     *            the subwindow to be added
+     * @return 
+     */
     public SubWindowDesktop addSubWindow(SubWindow sw) {
-        this.subwindows.add(sw);
-        this.layout.addComponent(sw);
+        this.windowDesktopArea.addComponent(sw);
+        
+        Button wButton = new Button(sw.getCaption());
+        wButton.setData(sw);
+        wButton.addClickListener((event) -> {
+            SubWindow swd = (SubWindow)event.getButton().getData();
+            LOGGER.log(Level.INFO, "window: "+swd.getCaption());
+            ((SubWindow)event.getButton().getData()).bringToFront();
+        });
+        
+        this.openWindowsBar.addComponent(wButton);
+        sw.addCloseListener(this);
         return this;
     }
     
-    public List<SubWindow> getWindows() {
-        return subwindows;
+    /**
+     * Remove the window from the desktop
+     *
+     * @param window
+     *            the window to be removed
+     * @return 
+     */
+    public boolean removeWindow(SubWindow window) {
+        
+        this.windowDesktopArea.removeComponent(window);
+//        desktopPanel.fireComponentDetachEvent(window);
+//        fireWindowOrder(Collections.singletonMap(-1, window));
+        return true;
     }
+    
+    /**
+     * Gets all the windows added to this UI.
+     *
+     * @return an unmodifiable collection of windows
+     */
+    public Collection<SubWindow> getWindows() {
+        return windowDesktopArea.getWindows();
+    }
+
+    @Override
+    protected SubWindowDesktopState getState() {
+        return (SubWindowDesktopState)super.getState();
+        
+    }
+    
+    @Override
+    protected SubWindowDesktopState getState(boolean markAsDirty) {
+        return (SubWindowDesktopState) super.getState(markAsDirty);
+    }
+
+    @Override
+    public void windowClose(SubWindow.CloseEvent e) {
+        for (Iterator<Component> iterator = openWindowsBar.iterator(); iterator.hasNext();) {
+            Button next = (Button)iterator.next();
+            if (next.getData() == e.getWindow()) {
+                openWindowsBar.removeComponent(next);
+            }
+        }
+    }
+    
 }

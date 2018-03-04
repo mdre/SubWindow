@@ -56,6 +56,7 @@ public class SubWindowOrderEvent  extends GwtEvent<SubWindowOrderHandler> {
      * @return windows in the specific order
      */
     public SubWindowWidget[] getWindows() {
+        LOGGER.log(Level.INFO, "getWindows");
         return windows.toArray(new SubWindowWidget[windows.size()]);
     }
 

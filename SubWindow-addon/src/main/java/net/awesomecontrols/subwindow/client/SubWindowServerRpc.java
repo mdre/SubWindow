@@ -1,17 +1,27 @@
 package net.awesomecontrols.subwindow.client;
 
-import com.vaadin.shared.MouseEventDetails;
-import com.vaadin.shared.communication.ServerRpc;
 
 // ServerRpc is used to pass events from client to server
 import com.vaadin.shared.communication.ServerRpc;
 import com.vaadin.shared.ui.ClickRpc;
-import com.vaadin.shared.ui.window.WindowMode;
 
+/**
+ *
+ * @author SShadow
+ */
 public interface SubWindowServerRpc extends ClickRpc, ServerRpc {
 
-    public void windowModeChanged(WindowMode newState);
+    /**
+     *
+     * @param newState windowState
+     */
+    public void windowModeChanged(SubWindowMode newState);
 
+    /**
+     *
+     * @param x int
+     * @param y int
+     */
     public void windowMoved(int x, int y);
 
 }

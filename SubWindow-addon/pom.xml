@@ -1,51 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<groupId>net.awesomecontrols</groupId>
-	<artifactId>SubWindow</artifactId>
-	<packaging>jar</packaging>
-	<version>0.1-SNAPSHOT</version>
-	<name>SubWindow - SubWindow Add-on</name>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.github.mdre</groupId>
+    <artifactId>SubWindow</artifactId>
+    <packaging>jar</packaging>
+    <version>0.3-SNAPSHOT</version>
+    <name>SubWindow - SubWindow Add-on</name>
 
-	<prerequisites>
-		<maven>3</maven>
-	</prerequisites>
+    <prerequisites>
+        <maven>3</maven>
+    </prerequisites>
 
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<maven.compiler.source>1.8</maven.compiler.source>
-		<maven.compiler.target>1.8</maven.compiler.target>
-		<vaadin.version>8.1.5</vaadin.version>
-		<vaadin.plugin.version>8.1.5</vaadin.plugin.version>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <vaadin.version>8.2.1</vaadin.version>
+        <vaadin.plugin.version>8.2.1</vaadin.plugin.version>
 
-		<!-- ZIP Manifest fields -->
-		<Implementation-Version>${project.version}</Implementation-Version>
-		<!-- Must not change this because of the Directory -->
-		<Implementation-Title>${project.name}</Implementation-Title>
-		<Implementation-Vendor>${project.organization.name}</Implementation-Vendor>
-		<Vaadin-License-Title>Apache License 2.0</Vaadin-License-Title>
-		<Vaadin-Addon>${project.artifactId}-${project.version}.jar</Vaadin-Addon>
-	</properties>
+        <!-- ZIP Manifest fields -->
+        <Implementation-Version>${project.version}</Implementation-Version>
+        <!-- Must not change this because of the Directory -->
+        <Implementation-Title>${project.name}</Implementation-Title>
+        <Implementation-Vendor>${project.organization.name}</Implementation-Vendor>
+        <Vaadin-License-Title>Apache License 2.0</Vaadin-License-Title>
+        <Vaadin-Addon>${project.artifactId}-${project.version}.jar</Vaadin-Addon>
+    </properties>
 
-    <!--
-	<organization>
-		<name>My Name</name>
-		<url>https://github.com/mygithubaccount/SubWindow/</url>
-	</organization>
 
-	<scm>
-		<url>git://github.com/mygithubaccount/SubWindow.git</url>
-		<connection>scm:git:git://github.com/mygithubaccount/SubWindow.git</connection>
-		<developerConnection>scm:git:ssh://git@github.com:/mygithubaccount/${componentClassName}.git</developerConnection>
-		<tag>SubWindow add-on for Vaadin</tag>
-	</scm>
+    <organization>
+        <name>My Name</name>
+        <url>https://github.com/mdre/SubWindow/</url>
+    </organization>
 
-        <issueManagement>
-                <system>GitHub</system>
-                <url>https://github.com/mygithubaccount/SubWindow/issues</url>
-        </issueManagement>
-    -->
+    <scm>
+        <url>git://github.com/mdre/SubWindow.git</url>
+        <connection>scm:git:git://github.com/mdre/SubWindow.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com:/mdre/${componentClassName}.git</developerConnection>
+        <tag>SubWindow add-on for Vaadin</tag>
+    </scm>
+
+    <issueManagement>
+        <system>GitHub</system>
+        <url>https://github.com/mdre/SubWindow/issues</url>
+    </issueManagement>
+
 
     <licenses>
         <license>
@@ -88,6 +88,17 @@
         </dependency>
     </dependencies>
 
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
+
     <build>
         <plugins>
             <plugin>
@@ -106,24 +117,25 @@
                             <Vaadin-Package-Version>1</Vaadin-Package-Version>
                             <Vaadin-License-Title>${Vaadin-License-Title}</Vaadin-License-Title>
                             <Vaadin-Widgetsets>net.awesomecontrols.subwindow.WidgetSet</Vaadin-Widgetsets>
+                            <Vaadin-Stylesheets>VAADIN/themes/subwindow/styles.scss</Vaadin-Stylesheets>
                         </manifestEntries>
                     </archive>
                 </configuration>
             </plugin>
 
-            <!--			<plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>2.10.3</version>
-                    <executions>
-                            <execution>
-                                    <id>attach-javadoc</id>
-                                    <goals>
-                                            <goal>jar</goal>
-                                    </goals>
-                            </execution>
-                    </executions>
-            </plugin>-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.10.3</version>
+                <executions>
+                    <execution>
+                        <id>attach-javadoc</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -134,6 +146,21 @@
                         <id>attach-sources</id>
                         <goals>
                             <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>1.6</version>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
                         </goals>
                     </execution>
                 </executions>
@@ -193,6 +220,18 @@
             </plugin>
 
 
+            <plugin>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>nexus-staging-maven-plugin</artifactId>
+                <version>1.6.8</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <serverId>ossrh</serverId>
+                    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                </configuration>
+            </plugin>
+
         </plugins>
 
         <!-- This is needed for the sources required by the client-side compiler to be
@@ -206,6 +245,9 @@
             </resource>
             <resource>
                 <directory>src/main/resources</directory>
+            </resource>
+            <resource>
+                <directory>src/main/webapp</directory>
             </resource>
         </resources>
 

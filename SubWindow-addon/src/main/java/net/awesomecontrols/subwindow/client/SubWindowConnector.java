@@ -2,7 +2,6 @@ package net.awesomecontrols.subwindow.client;
 
 import net.awesomecontrols.subwindow.SubWindow;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
@@ -15,7 +14,6 @@ import com.google.gwt.event.dom.client.DoubleClickEvent;
 import com.google.gwt.event.dom.client.DoubleClickHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorHierarchyChangeEvent;
@@ -23,38 +21,39 @@ import com.vaadin.client.LayoutManager;
 import com.vaadin.client.Paintable;
 import com.vaadin.client.UIDL;
 import com.vaadin.client.communication.StateChangeEvent;
+import static com.vaadin.client.ui.AbstractComponentConnector.isRealUpdate;
 import com.vaadin.client.ui.AbstractSingleComponentContainerConnector;
 import com.vaadin.client.ui.ClickEventHandler;
 import com.vaadin.client.ui.PostLayoutListener;
 import com.vaadin.client.ui.ShortcutActionHandler;
 import com.vaadin.client.ui.SimpleManagedLayout;
+import com.vaadin.client.ui.VWindow;
 import com.vaadin.client.ui.layout.MayScrollChildren;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.Connect;
-import com.vaadin.shared.ui.window.WindowMode;
-import java.util.logging.Level;
+import com.vaadin.shared.ui.window.WindowServerRpc;
 import java.util.logging.Logger;
 
 // Connector binds client-side widget class to server-side component class
 // Connector lives in the client and the @Connect annotation specifies the
 // corresponding server-side component
+
+/**
+ *
+ * @author SShadow
+ */
 @Connect(SubWindow.class)
 public class SubWindowConnector extends AbstractSingleComponentContainerConnector
         implements Paintable, SimpleManagedLayout, PostLayoutListener,
         MayScrollChildren, SubWindowMoveHandler {
 
-    private final static Logger LOGGER = Logger.getLogger(SubWindowConnector.class.getName());
-    static {
-        LOGGER.setLevel(Level.INFO);
-    }
-
-    
     private Node windowClone;
 
     private ClickEventHandler clickEventHandler = new ClickEventHandler(this) {
         @Override
-        protected void fireClick(NativeEvent event,MouseEventDetails mouseDetails) {
-            getRpcProxy(SubWindowServerRpc.class).click(mouseDetails);
+        protected void fireClick(NativeEvent event,
+                MouseEventDetails mouseDetails) {
+            getRpcProxy(WindowServerRpc.class).click(mouseDetails);
         }
     };
 
@@ -94,20 +93,26 @@ public class SubWindowConnector extends AbstractSingleComponentContainerConnecto
     protected void init() {
         super.init();
 
-        SubWindowWidget subwindow = getWidget();
-        subwindow.id = getConnectorId();
-        subwindow.client = getConnection();
+        SubWindowWidget window = getWidget();
+        window.id = getConnectorId();
+        window.client = getConnection();
+        window.connector = this;
 
-        getLayoutManager().registerDependency(this, subwindow.contentPanel.getElement());
-        getLayoutManager().registerDependency(this, subwindow.header);
-        getLayoutManager().registerDependency(this, subwindow.footer);
+        getLayoutManager().registerDependency(this,
+                window.contentPanel.getElement());
+        getLayoutManager().registerDependency(this, window.header);
+        getLayoutManager().registerDependency(this, window.footer);
 
-        subwindow.addHandler(maximizeRestoreClickHandler, ClickEvent.getType());
-        subwindow.addHandler(maximizeRestoreClickHandler, DoubleClickEvent.getType());
+        window.addHandler(maximizeRestoreClickHandler, ClickEvent.getType());
+        window.addHandler(maximizeRestoreClickHandler,
+                DoubleClickEvent.getType());
 
-        subwindow.setOwner(getConnection().getUIConnector().getWidget());
+        window.setOwner(getConnection().getUIConnector().getWidget());
 
-        subwindow.addMoveHandler(this);
+        window.addMoveHandler(this);
+        
+        // MODIFICADO 
+        this.setWindowOrderAndPosition();
     }
 
     @Override
@@ -119,31 +124,38 @@ public class SubWindowConnector extends AbstractSingleComponentContainerConnecto
         lm.unregisterDependency(this, window.footer);
     }
 
+    /**
+     *
+     * @param uidl uidl
+     * @param client client
+     */
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
 
-        SubWindowWidget subwindow = getWidget();
+        SubWindowWidget window = getWidget();
         String connectorId = getConnectorId();
 
         // Workaround needed for Testing Tools (GWT generates window DOM
         // slightly different in different browsers).
-        subwindow.closeBox.setId(connectorId + "_window_close");
-        subwindow.maximizeRestoreBox.setId(connectorId + "_window_maximizerestore");
+        window.closeBox.setId(connectorId + "_window_close");
+        window.maximizeRestoreBox
+                .setId(connectorId + "_window_maximizerestore");
 
-        subwindow.visibilityChangesDisabled = true;
+        window.visibilityChangesDisabled = true;
         if (!isRealUpdate(uidl)) {
             return;
         }
-        subwindow.visibilityChangesDisabled = false;
+        window.visibilityChangesDisabled = false;
 
         // we may have actions
         for (int i = 0; i < uidl.getChildCount(); i++) {
             UIDL childUidl = uidl.getChildUIDL(i);
             if (childUidl.getTag().equals("actions")) {
-                if (subwindow.shortcutHandler == null) {
-                    subwindow.shortcutHandler = new ShortcutActionHandler(connectorId, client);
+                if (window.shortcutHandler == null) {
+                    window.shortcutHandler = new ShortcutActionHandler(
+                            connectorId, client);
                 }
-                subwindow.shortcutHandler.updateActionMap(childUidl);
+                window.shortcutHandler.updateActionMap(childUidl);
             }
 
         }
@@ -154,9 +166,9 @@ public class SubWindowConnector extends AbstractSingleComponentContainerConnecto
              * ApplicationConnection if another component was focused by the
              * server side.
              */
-            subwindow.contentPanel.focus();
-            subwindow.bringToFrontSequence = uidl.getIntAttribute("bringToFront");
-            SubWindowWidget.deferOrdering();
+            window.contentPanel.focus();
+            window.bringToFrontSequence = uidl.getIntAttribute("bringToFront");
+            VWindow.deferOrdering();
         }
     }
 
@@ -171,7 +183,8 @@ public class SubWindowConnector extends AbstractSingleComponentContainerConnecto
     }
 
     @Override
-    public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent event) {
+    public void onConnectorHierarchyChange(
+            ConnectorHierarchyChangeEvent event) {
         // We always have 1 child, unless the child is hidden
         getWidget().contentPanel.setWidget(getContentWidget());
 
@@ -187,6 +200,9 @@ public class SubWindowConnector extends AbstractSingleComponentContainerConnecto
 
     }
 
+    /**
+     *
+     */
     @Override
     public void layout() {
         LayoutManager lm = getLayoutManager();
@@ -221,7 +237,8 @@ public class SubWindowConnector extends AbstractSingleComponentContainerConnecto
         int minHeight = footerHeight + headerHeight;
 
         getWidget().getElement().getStyle().setPropertyPx("minWidth", minWidth);
-        getWidget().getElement().getStyle().setPropertyPx("minHeight",minHeight);
+        getWidget().getElement().getStyle().setPropertyPx("minHeight",
+                minHeight);
 
         /*
          * Must set absolute position if the child has relative height and
@@ -264,7 +281,7 @@ public class SubWindowConnector extends AbstractSingleComponentContainerConnecto
                     .warning("Called postLayout to detached Window.");
             return;
         }
-        if (window.centered && getState().windowMode != WindowMode.MAXIMIZED) {
+        if (window.centered && getState().windowMode != SubWindowMode.MAXIMIZED) {
             window.center();
         }
         window.positionOrSizeUpdated();
@@ -282,7 +299,8 @@ public class SubWindowConnector extends AbstractSingleComponentContainerConnecto
             // have to replace them with stubs in the clone. And we can't just
             // erase them, because there are corresponding player widgets to
             // animate
-            windowClone = cloneNodeFilteringMedia(getWidget().getElement().getFirstChild());
+            windowClone = cloneNodeFilteringMedia(
+                    getWidget().getElement().getFirstChild());
         }
     }
 
@@ -293,8 +311,9 @@ public class SubWindowConnector extends AbstractSingleComponentContainerConnecto
                     || "video".equalsIgnoreCase(old.getTagName())) {
                 if (!old.hasAttribute("controls")
                         && "audio".equalsIgnoreCase(old.getTagName())) {
-                    return null; // nothing to animate, so we won't add this to
+                    // nothing to animate, so we won't add this to
                     // the clone
+                    return null;
                 }
                 Element newEl = DOM.createElement(old.getTagName());
                 if (old.hasAttribute("controls")) {
@@ -339,14 +358,16 @@ public class SubWindowConnector extends AbstractSingleComponentContainerConnecto
             window.setVaadinModality(!window.vaadinModality);
         }
         boolean resizeable = state.resizable
-                && state.windowMode == WindowMode.NORMAL;
+                && state.windowMode == SubWindowMode.NORMAL;
         window.setResizable(resizeable);
 
         window.resizeLazy = state.resizeLazy;
 
-        window.setDraggable(state.draggable && state.windowMode == WindowMode.NORMAL);
+        window.setDraggable(
+                state.draggable && state.windowMode == SubWindowMode.NORMAL);
 
-        window.updateMaximizeRestoreClassName(state.resizable, state.windowMode);
+        window.updateMaximizeRestoreClassName(state.resizable,
+                state.windowMode);
 
         // Caption must be set before required header size is measured. If
         // the caption attribute is missing the caption should be cleared.
@@ -364,7 +385,8 @@ public class SubWindowConnector extends AbstractSingleComponentContainerConnecto
 
         window.setTabStopEnabled(getState().assistiveTabStop);
         window.setTabStopTopAssistiveText(getState().assistiveTabStopTopText);
-        window.setTabStopBottomAssistiveText(getState().assistiveTabStopBottomText);
+        window.setTabStopBottomAssistiveText(
+                getState().assistiveTabStopBottomText);
 
         clickEventHandler.handleEventHandlerRegistration();
 
@@ -379,17 +401,12 @@ public class SubWindowConnector extends AbstractSingleComponentContainerConnecto
         // Center this window on screen if requested
         // This had to be here because we might not know the content size before
         // everything is painted into the window
+
         // centered is this is unset on move/resize
         window.centered = state.centered;
         // Ensure centering before setting visible (#16486)
-        if (window.centered && getState().windowMode != WindowMode.MAXIMIZED) {
-            Scheduler.get().scheduleFinally(new Scheduler.ScheduledCommand() {
-
-                @Override
-                public void execute() {
-                    getWidget().center();
-                }
-            });
+        if (window.centered && getState().windowMode != SubWindowMode.MAXIMIZED) {
+            Scheduler.get().scheduleFinally(() -> getWidget().center());
         }
         window.setVisible(true);
     }
@@ -397,17 +414,20 @@ public class SubWindowConnector extends AbstractSingleComponentContainerConnecto
     // Need to override default because of window mode
     @Override
     protected void updateComponentSize() {
-        if (getState().windowMode == WindowMode.NORMAL) {
+        if (getState().windowMode == SubWindowMode.NORMAL) {
             super.updateComponentSize();
-        } else if (getState().windowMode == WindowMode.MAXIMIZED) {
+        } else if (getState().windowMode == SubWindowMode.MAXIMIZED) {
             super.updateComponentSize("100%", "100%");
         }
     }
 
+    /**
+     *
+     */
     protected void updateWindowPosition() {
         SubWindowWidget window = getWidget();
         SubWindowState state = getState();
-        if (state.windowMode == WindowMode.NORMAL) {
+        if (state.windowMode == SubWindowMode.NORMAL) {
             // if centered, position handled in postLayout()
             if (!state.centered
                     && (state.positionX >= 0 || state.positionY >= 0)) {
@@ -416,32 +436,41 @@ public class SubWindowConnector extends AbstractSingleComponentContainerConnecto
                 // positioning the window so it stacks with other windows
                 window.setPopupPosition(state.positionX, state.positionY);
             }
-        } else if (state.windowMode == WindowMode.MAXIMIZED) {
+        } else if (state.windowMode == SubWindowMode.MAXIMIZED) {
             window.setPopupPositionNoUpdate(0, 0);
         }
     }
 
+    /**
+     *
+     */
     protected void updateWindowMode() {
         SubWindowWidget window = getWidget();
         SubWindowState state = getState();
 
         // update draggable on widget
-        window.setDraggable(state.draggable && state.windowMode == WindowMode.NORMAL);
+        window.setDraggable(
+                state.draggable && state.windowMode == SubWindowMode.NORMAL);
         // update resizable on widget
-        window.setResizable(state.resizable && state.windowMode == WindowMode.NORMAL);
+        window.setResizable(
+                state.resizable && state.windowMode == SubWindowMode.NORMAL);
         updateComponentSize();
         updateWindowPosition();
-        window.updateMaximizeRestoreClassName(state.resizable,state.windowMode);
+        window.updateMaximizeRestoreClassName(state.resizable,
+                state.windowMode);
         window.updateContentsSize();
     }
 
+    /**
+     *
+     */
     protected void onMaximizeRestore() {
         SubWindowState state = getState();
         if (state.resizable) {
-            if (state.windowMode == WindowMode.MAXIMIZED) {
-                state.windowMode = WindowMode.NORMAL;
+            if (state.windowMode == SubWindowMode.MAXIMIZED) {
+                state.windowMode = SubWindowMode.NORMAL;
             } else {
-                state.windowMode = WindowMode.MAXIMIZED;
+                state.windowMode = SubWindowMode.MAXIMIZED;
             }
             updateWindowMode();
 
@@ -454,7 +483,8 @@ public class SubWindowConnector extends AbstractSingleComponentContainerConnecto
     }
 
     /**
-     * Gives the WindowConnector an order number. As a side effect, moves the window according to its order number so the windows are stacked. This
+     * Gives the WindowConnector an order number. As a side effect, moves the
+     * window according to its order number so the windows are stacked. This
      * method should be called for each window in the order they should appear.
      */
     public void setWindowOrderAndPosition() {
@@ -472,6 +502,7 @@ public class SubWindowConnector extends AbstractSingleComponentContainerConnecto
 
     @Override
     public void onWindowMove(SubWindowMoveEvent event) {
-        getRpcProxy(SubWindowServerRpc.class).windowMoved(event.getNewX(), event.getNewY());
+        getRpcProxy(WindowServerRpc.class).windowMoved(event.getNewX(),
+                event.getNewY());
     }
 }

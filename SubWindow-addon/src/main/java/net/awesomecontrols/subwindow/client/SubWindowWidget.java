@@ -103,7 +103,7 @@ public class SubWindowWidget extends VOverlay implements ShortcutActionHandlerOw
     /**
      *
      */
-    public static final int Z_INDEX = 10000;
+    public static final int Z_INDEX = 9000;
 
     /** For internal use only. May be removed or replaced in the future. */
     public Element contents;

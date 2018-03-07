@@ -128,4 +128,7 @@ public class SubWindowState extends PanelState {
      */
     @NoLayout
     public String assistiveTabStopBottomText = "Bottom of Dialog";
+    
+    @NoLayout
+    public int forceBringToFront = 0;
 }

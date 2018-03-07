@@ -27,6 +27,7 @@ import com.vaadin.client.ui.ClickEventHandler;
 import com.vaadin.client.ui.PostLayoutListener;
 import com.vaadin.client.ui.ShortcutActionHandler;
 import com.vaadin.client.ui.SimpleManagedLayout;
+import com.vaadin.client.ui.VNotification;
 import com.vaadin.client.ui.VWindow;
 import com.vaadin.client.ui.layout.MayScrollChildren;
 import com.vaadin.shared.MouseEventDetails;
@@ -409,6 +410,9 @@ public class SubWindowConnector extends AbstractSingleComponentContainerConnecto
             Scheduler.get().scheduleFinally(() -> getWidget().center());
         }
         window.setVisible(true);
+        if (this.getState().forceBringToFront > 0) {
+            window.bringToFront();
+        }
     }
 
     // Need to override default because of window mode

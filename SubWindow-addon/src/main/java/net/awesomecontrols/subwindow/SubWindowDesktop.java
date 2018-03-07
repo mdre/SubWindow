@@ -22,9 +22,12 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.Composite;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.VerticalSplitPanel;
 import com.vaadin.ui.Window;
+import com.vaadin.ui.themes.ValoTheme;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -45,8 +48,8 @@ public class SubWindowDesktop extends Composite implements SubWindow.CloseListen
     }
 
     private Panel desktopPanel = new Panel();
-    private WindowDesktopArea windowDesktopArea = new WindowDesktopArea();
-    HorizontalLayout openWindowsBar = new HorizontalLayout();
+    private WindowsDesktopArea windowDesktopArea = new WindowsDesktopArea();
+    HorizontalLayout openedWindowsBar = new HorizontalLayout();
     /**
      * create an empty desktop
      */
@@ -57,13 +60,18 @@ public class SubWindowDesktop extends Composite implements SubWindow.CloseListen
     private void init() {
         windowDesktopArea.setSizeFull();
         
-        openWindowsBar.setHeight(50,Unit.PIXELS);
+        openedWindowsBar.setHeight(30,Unit.PIXELS);
+        openedWindowsBar.setMargin(false);
+        openedWindowsBar.setSpacing(false);
+        openedWindowsBar.addStyleName("openedWindowsBar");
         
         VerticalLayout lyDesktop = new VerticalLayout();
         lyDesktop.setSizeFull();
+        lyDesktop.setMargin(false);
+        lyDesktop.setSpacing(false);
         
         lyDesktop.addComponent(windowDesktopArea);
-        lyDesktop.addComponent(openWindowsBar);
+        lyDesktop.addComponent(openedWindowsBar);
         lyDesktop.setExpandRatio(windowDesktopArea, 1);
         
         desktopPanel.setContent(lyDesktop);
@@ -78,18 +86,49 @@ public class SubWindowDesktop extends Composite implements SubWindow.CloseListen
      * @return 
      */
     public SubWindowDesktop addSubWindow(SubWindow sw) {
-        this.windowDesktopArea.addComponent(sw);
+        this.windowDesktopArea.addSubWindow(sw);
         
         Button wButton = new Button(sw.getCaption());
         wButton.setData(sw);
+        wButton.addStyleName(ValoTheme.BUTTON_BORDERLESS);
+        wButton.addStyleName(ValoTheme.BUTTON_TINY);
         wButton.addClickListener((event) -> {
             SubWindow swd = (SubWindow)event.getButton().getData();
-            LOGGER.log(Level.INFO, "window: "+swd.getCaption());
             ((SubWindow)event.getButton().getData()).bringToFront();
         });
         
-        this.openWindowsBar.addComponent(wButton);
+        
+        this.openedWindowsBar.addComponent(wButton);
         sw.addCloseListener(this);
+        return this;
+    }
+    
+    /**
+     * Hide the opened windows bar
+     * @return this
+     */
+    public SubWindowDesktop hideOpenedWindowsBar() {
+        this.openedWindowsBar.setVisible(false);
+        return this;
+    }
+    
+    /**
+     * Show the opened windows bar
+     * @return this
+     */
+    public SubWindowDesktop showOpenedWindowsBar() {
+        this.openedWindowsBar.setVisible(true);
+        return this;
+    }
+    
+    /**
+     * Set de OpenedWindowsBar height
+     * @param h height
+     * @param u Unit
+     * @return this
+     */
+    public SubWindowDesktop setOpenedWindowsBarHeight(float h, Unit u) {
+        openedWindowsBar.setHeight(h,u);
         return this;
     }
     
@@ -102,7 +141,15 @@ public class SubWindowDesktop extends Composite implements SubWindow.CloseListen
      */
     public boolean removeWindow(SubWindow window) {
         
-        this.windowDesktopArea.removeComponent(window);
+        this.windowDesktopArea.removeWindow(window);
+        
+        // quitar de la barra
+        for (Iterator<Component> iterator = this.openedWindowsBar.iterator(); iterator.hasNext();) {
+            Button next = (Button)iterator.next();
+            if (next.getData() == window ) {
+                this.openedWindowsBar.removeComponent(next);
+            }
+        }
 //        desktopPanel.fireComponentDetachEvent(window);
 //        fireWindowOrder(Collections.singletonMap(-1, window));
         return true;
@@ -130,10 +177,10 @@ public class SubWindowDesktop extends Composite implements SubWindow.CloseListen
 
     @Override
     public void windowClose(SubWindow.CloseEvent e) {
-        for (Iterator<Component> iterator = openWindowsBar.iterator(); iterator.hasNext();) {
+        for (Iterator<Component> iterator = openedWindowsBar.iterator(); iterator.hasNext();) {
             Button next = (Button)iterator.next();
             if (next.getData() == e.getWindow()) {
-                openWindowsBar.removeComponent(next);
+                openedWindowsBar.removeComponent(next);
             }
         }
     }

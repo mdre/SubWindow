@@ -97,6 +97,24 @@ public class DemoUI extends UI
         
         
         
+        final SubWindow subw3 = new SubWindow("SubWindow 3");
+        subw3.setWidth("300px");
+        subw3.setHeight("200px");
+        
+        Panel p3 = new Panel();
+        p3.setSizeFull();
+        VerticalLayout vl3 = new VerticalLayout();
+        vl3.addComponent(new Label("Label 1"));
+        vl3.addComponent(new Label("Label 2"));
+        vl3.addComponent(new Label("Label 3"));
+        vl3.setSizeFull();
+        p3.setContent(vl3);
+        
+        subw3.setContent(p3);
+        subw3.setPosition(100, 120);
+        
+        
+        
         
         // Show it in the middle of the screen
         SubWindowDesktop swd = new SubWindowDesktop();
@@ -106,12 +124,17 @@ public class DemoUI extends UI
 //        layout.setSpacing(false);
         swd.addSubWindow(subw);
         swd.addSubWindow(subw2);
+        swd.addSubWindow(subw3);
         
         HorizontalSplitPanel hsp = new HorizontalSplitPanel(new Panel(),swd);
-        hsp.setSplitPosition(200, Unit.PIXELS);
+        hsp.setSplitPosition(100, Unit.PIXELS);
         
-        VerticalSplitPanel vsp = new VerticalSplitPanel(superior,hsp);
-        vsp.setSplitPosition(200, Unit.PIXELS);
+        VerticalSplitPanel vsp2 = new VerticalSplitPanel(hsp, new Panel());
+        vsp2.setSplitPosition(50, Unit.PIXELS,true);
+        
+        VerticalSplitPanel vsp = new VerticalSplitPanel(superior,vsp2);
+        vsp.setSplitPosition(100, Unit.PIXELS);
+        
         
 //        layout.setComponentAlignment(component, Alignment.MIDDLE_CENTER);
         setContent(vsp);

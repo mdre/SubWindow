@@ -15109,6 +15109,14 @@ div.v-layout.v-horizontal.v-widget {
 	overflow: hidden;
 }
 
+.demo .v-horizontallayout-openedWindowsBar {
+	border: thin grey solid;
+}
+
+.demo .v-csslayout-windowsDesktopArea {
+	background-color: darkred;
+}
+
 .demo .v-subwindow {
 	padding: 4px 4px;
 	border-radius: 4px;

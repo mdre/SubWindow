@@ -4,7 +4,7 @@
     <groupId>com.github.mdre</groupId>
     <artifactId>SubWindow</artifactId>
     <packaging>jar</packaging>
-    <version>0.3-SNAPSHOT</version>
+    <version>0.3.8-SNAPSHOT</version>
     <name>SubWindow - SubWindow Add-on</name>
 
     <prerequisites>
@@ -29,14 +29,14 @@
 
 
     <organization>
-        <name>My Name</name>
+        <name>Awesome controls</name>
         <url>https://github.com/mdre/SubWindow/</url>
     </organization>
 
     <scm>
         <url>git://github.com/mdre/SubWindow.git</url>
         <connection>scm:git:git://github.com/mdre/SubWindow.git</connection>
-        <developerConnection>scm:git:ssh://git@github.com:/mdre/${componentClassName}.git</developerConnection>
+        <developerConnection>scm:git:ssh://git@github.com:/mdre/SubWindow.git</developerConnection>
         <tag>SubWindow-0.3</tag>
     </scm>
 
@@ -87,11 +87,12 @@
         </dependency>
     </dependencies>
 
+
     <distributionManagement>
-        <snapshotRepository>
+<!--        <snapshotRepository>
             <id>ossrh</id>
             <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-        </snapshotRepository>
+        </snapshotRepository>-->
         <repository>
             <id>ossrh</id>
             <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>

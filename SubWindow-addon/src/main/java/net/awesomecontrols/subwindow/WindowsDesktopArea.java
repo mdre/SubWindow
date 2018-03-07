@@ -17,19 +17,32 @@
 package net.awesomecontrols.subwindow;
 
 import com.vaadin.ui.CssLayout;
+import com.vaadin.ui.Panel;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.LinkedHashSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author Marcelo D. Ré {@literal <marcelo.re@gmail.com>}
  */
-public class WindowDesktopArea extends CssLayout {
+public class WindowsDesktopArea extends Panel {
+    private final static Logger LOGGER = Logger.getLogger(WindowsDesktopArea.class .getName());
+    static {
+        LOGGER.setLevel(Level.INFO);
+    }
+    
     /**
      * List of windows in this UI.
      */
     private final LinkedHashSet<SubWindow> windows = new LinkedHashSet<>();
+    private WindowsDesktopLayout windowsDesktopLayout = new WindowsDesktopLayout();
+    public WindowsDesktopArea() {
+        windowsDesktopLayout.addStyleName("windowsDesktopArea");
+        this.setContent(this.windowsDesktopLayout);
+    }
+    
     
     /**
      * Add a subwindow to the desktop.
@@ -38,10 +51,9 @@ public class WindowDesktopArea extends CssLayout {
      *            the subwindow to be added
      * @return this
      */
-    public WindowDesktopArea addSubWindow(SubWindow sw) {
+    public WindowsDesktopArea addSubWindow(SubWindow sw) {
         this.windows.add(sw);
-        this.addComponent(sw);
-        
+        this.windowsDesktopLayout.addComponent(sw);
         return this;
     }
     
@@ -60,7 +72,7 @@ public class WindowDesktopArea extends CssLayout {
         window.setParent(null);
         markAsDirty();
         window.fireClose();
-        this.removeComponent(window);
+        this.windowsDesktopLayout.removeComponent(window);
 //        desktopPanel.fireComponentDetachEvent(window);
 //        fireWindowOrder(Collections.singletonMap(-1, window));
         return true;
@@ -72,6 +84,7 @@ public class WindowDesktopArea extends CssLayout {
      * @return an unmodifiable collection of windows
      */
     public Collection<SubWindow> getWindows() {
-        return Collections.unmodifiableCollection(windows);
+        return windows;
+//        return Collections.unmodifiableCollection(windows);
     }
 }

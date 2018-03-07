@@ -4,7 +4,7 @@
     <groupId>com.github.mdre</groupId>
     <artifactId>SubWindow</artifactId>
     <packaging>jar</packaging>
-    <version>0.3.10-SNAPSHOT</version>
+    <version>0.3.12-SNAPSHOT</version>
     <name>SubWindow - SubWindow Add-on</name>
 
     <prerequisites>
@@ -89,10 +89,10 @@
 
 
     <distributionManagement>
-<!--        <snapshotRepository>
+        <snapshotRepository>
             <id>ossrh</id>
             <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-        </snapshotRepository>-->
+        </snapshotRepository>
         <repository>
             <id>ossrh</id>
             <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
@@ -126,7 +126,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.10.3</version>
+                <version>2.10.4</version>
                 <executions>
                     <execution>
                         <id>attach-javadoc</id>
@@ -140,7 +140,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
-                <version>3.0.0</version>
+                <version>3.0.1</version>
                 <executions>
                     <execution>
                         <id>attach-sources</id>
@@ -228,7 +228,7 @@
                 <configuration>
                     <serverId>ossrh</serverId>
                     <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                    <autoReleaseAfterClose>false</autoReleaseAfterClose>
                 </configuration>
             </plugin>
 
@@ -270,7 +270,7 @@
                     <id>vaadin-snapshots</id>
                     <url>https://oss.sonatype.org/content/repositories/vaadin-snapshots/</url>
                     <releases>
-                        <enabled>false</enabled>
+                        <enabled>true</enabled>
                     </releases>
                     <snapshots>
                         <enabled>true</enabled>
@@ -286,7 +286,7 @@
                     <id>vaadin-snapshots</id>
                     <url>https://oss.sonatype.org/content/repositories/vaadin-snapshots/</url>
                     <releases>
-                        <enabled>false</enabled>
+                        <enabled>true</enabled>
                     </releases>
                     <snapshots>
                         <enabled>true</enabled>

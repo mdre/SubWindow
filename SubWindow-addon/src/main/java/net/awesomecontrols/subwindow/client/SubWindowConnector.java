@@ -84,6 +84,29 @@ public class SubWindowConnector extends AbstractSingleComponentContainerConnecto
             }
         }
     };
+    
+    private WindowEventHandler minimizeClickHandler = new WindowEventHandler() {
+
+        @Override
+        public void onClick(ClickEvent event) {
+            final Element target = event.getNativeEvent().getEventTarget()
+                    .cast();
+            if (target == getWidget().minimizeBox) {
+                // Click on maximize/restore box
+                onMinimize();
+            }
+        }
+
+        @Override
+        public void onDoubleClick(DoubleClickEvent event) {
+//            final Element target = event.getNativeEvent().getEventTarget()
+//                    .cast();
+//            if (getWidget().header.isOrHasChild(target)) {
+//                // Double click on header
+//                onMaximizeRestore();
+//            }
+        }
+    };
 
     @Override
     public boolean delegateCaptionHandling() {
@@ -104,6 +127,7 @@ public class SubWindowConnector extends AbstractSingleComponentContainerConnecto
         getLayoutManager().registerDependency(this, window.header);
         getLayoutManager().registerDependency(this, window.footer);
 
+        window.addHandler(minimizeClickHandler, ClickEvent.getType());
         window.addHandler(maximizeRestoreClickHandler, ClickEvent.getType());
         window.addHandler(maximizeRestoreClickHandler,
                 DoubleClickEvent.getType());
@@ -476,6 +500,21 @@ public class SubWindowConnector extends AbstractSingleComponentContainerConnecto
             } else {
                 state.windowMode = SubWindowMode.MAXIMIZED;
             }
+            updateWindowMode();
+
+            SubWindowWidget window = getWidget();
+            window.bringToFront();
+
+            getRpcProxy(SubWindowServerRpc.class)
+                    .windowModeChanged(state.windowMode);
+        }
+    }
+    
+    protected void onMinimize() {
+        SubWindowState state = getState();
+        if (state.resizable) {
+            state.windowMode = SubWindowMode.HIDDEN;
+            
             updateWindowMode();
 
             SubWindowWidget window = getWidget();

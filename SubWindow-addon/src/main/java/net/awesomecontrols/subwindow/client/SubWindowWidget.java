@@ -75,6 +75,7 @@ import com.vaadin.shared.Connector;
 import com.vaadin.shared.EventId;
 import com.vaadin.shared.ui.window.WindowMode;
 import com.vaadin.shared.ui.window.WindowRole;
+import java.util.logging.Level;
 
 /**
  * "Sub window" component.
@@ -140,6 +141,9 @@ public class SubWindowWidget extends VOverlay implements ShortcutActionHandlerOw
 
     /** For internal use only. May be removed or replaced in the future. */
     public Element maximizeRestoreBox;
+
+    /** For internal use only. May be removed or replaced in the future. */
+    public Element minimizeBox;
 
     /** For internal use only. May be removed or replaced in the future. */
     public ApplicationConnection client;
@@ -418,9 +422,15 @@ public class SubWindowWidget extends VOverlay implements ShortcutActionHandlerOw
         DOM.setElementProperty(resizeBox, "className",
                 CLASSNAME + "-resizebox");
         closeBox = DOM.createDiv();
+        
         maximizeRestoreBox = DOM.createDiv();
         DOM.setElementProperty(maximizeRestoreBox, "className",
                 CLASSNAME + "-maximizebox");
+        
+        minimizeBox = DOM.createDiv();
+        DOM.setElementProperty(minimizeBox, "className",
+                CLASSNAME + "-minimizebox");
+        
         DOM.setElementAttribute(maximizeRestoreBox, "tabindex", "0");
         DOM.setElementProperty(closeBox, "className", CLASSNAME + "-closebox");
         DOM.setElementAttribute(closeBox, "tabindex", "0");
@@ -434,6 +444,7 @@ public class SubWindowWidget extends VOverlay implements ShortcutActionHandlerOw
 
         DOM.appendChild(wrapper, topTabStop);
         DOM.appendChild(wrapper, header);
+        DOM.appendChild(header, minimizeBox);
         DOM.appendChild(header, maximizeRestoreBox);
         DOM.appendChild(header, closeBox);
         DOM.appendChild(header, headerText);
@@ -441,7 +452,7 @@ public class SubWindowWidget extends VOverlay implements ShortcutActionHandlerOw
         DOM.appendChild(wrapper, footer);
         DOM.appendChild(wrapper, bottomTabStop);
         DOM.appendChild(super.getContainerElement(), wrapper);
-
+        
         sinkEvents(Event.ONDBLCLICK | Event.MOUSEEVENTS | Event.TOUCHEVENTS
                 | Event.ONCLICK | Event.ONLOSECAPTURE);
 
@@ -1104,6 +1115,7 @@ public class SubWindowWidget extends VOverlay implements ShortcutActionHandlerOw
 
     private void onCloseClick() {
         // Send the close event to the server
+        subWindowOrder.remove(this);
         client.updateVariable(id, "close", true, true);
     }
 

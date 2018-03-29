@@ -94,7 +94,8 @@ public class SubWindowDesktop extends Composite implements SubWindow.CloseListen
         wButton.addStyleName(ValoTheme.BUTTON_TINY);
         wButton.addClickListener((event) -> {
             SubWindow swd = (SubWindow)event.getButton().getData();
-            ((SubWindow)event.getButton().getData()).bringToFront();
+            swd.setVisible(true);
+            swd.bringToFront();
         });
         
         

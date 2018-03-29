@@ -162,6 +162,7 @@ $v-subwindow-modality-curtain-background-color: #222 !default;
 
     .#{$primary-stylename}-closebox,
     .#{$primary-stylename}-maximizebox,
+    .#{$primary-stylename}-minimizebox,
     .#{$primary-stylename}-restorebox {
         position: absolute;
         z-index: 3;
@@ -220,6 +221,18 @@ $v-subwindow-modality-curtain-background-color: #222 !default;
         @include valo-focus-style;
     }
 
+    .#{$primary-stylename}-minimizebox:focus::after {
+        content: "";
+        position: absolute;
+        top: round($v-unit-size/6);
+        right: round($v-unit-size/18);
+        bottom: round($v-unit-size/6);
+        left: round($v-unit-size/6);
+        border-radius: $v-subwindow-border-radius;
+
+        @include valo-focus-style;
+    }
+
     .#{$primary-stylename}-closebox {
         padding-right: round($v-unit-size/9);
         @include valo-window-close-icon-style;
@@ -230,6 +243,7 @@ $v-subwindow-modality-curtain-background-color: #222 !default;
     }
 
     .#{$primary-stylename}-maximizebox,
+    .#{$primary-stylename}-minimizebox,
     .#{$primary-stylename}-restorebox {
         right: $v-unit-size - round($v-unit-size/9);
         padding-left: round($v-unit-size/9);
@@ -245,6 +259,7 @@ $v-subwindow-modality-curtain-background-color: #222 !default;
 
     .#{$primary-stylename}-closebox-disabled,
     .#{$primary-stylename}-resizebox-disabled,
+    .#{$primary-stylename}-minimizebox-disabled,
     .#{$primary-stylename}-restorebox-disabled,
     .#{$primary-stylename}-maximizebox-disabled {
         display: none;
@@ -262,6 +277,10 @@ $v-subwindow-modality-curtain-background-color: #222 !default;
 
     .#{$primary-stylename}-maximizebox {
         @include valo-window-maximize-icon-style;
+    }
+    
+    .#{$primary-stylename}-minimizebox {
+        @include valo-window-minimize-icon-style;
     }
 
     .#{$primary-stylename}-restorebox {
@@ -432,6 +451,18 @@ $v-subwindow-modality-curtain-background-color: #222 !default;
 @mixin valo-window-maximize-icon-style {
     &:before {
         content: "+";
+    }
+}
+
+/**
+ *
+ *
+ *
+ * @group window
+ */
+@mixin valo-window-minimize-icon-style {
+    &:before {
+        content: "_";
     }
 }
 

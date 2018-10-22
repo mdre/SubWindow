@@ -16,13 +16,6 @@
 
 package net.awesomecontrols.subwindow.client;
 
-import static com.vaadin.client.WidgetUtil.isFocusedElementEditable;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
 import com.google.gwt.aria.client.Id;
 import com.google.gwt.aria.client.RelevantValue;
 import com.google.gwt.aria.client.Roles;
@@ -56,6 +49,7 @@ import com.vaadin.client.ConnectorMap;
 import com.vaadin.client.Focusable;
 import com.vaadin.client.LayoutManager;
 import com.vaadin.client.WidgetUtil;
+import static com.vaadin.client.WidgetUtil.isFocusedElementEditable;
 import com.vaadin.client.debug.internal.VDebugWindow;
 import com.vaadin.client.ui.FocusUtil;
 import com.vaadin.client.ui.FocusableScrollPanel;
@@ -66,16 +60,16 @@ import com.vaadin.client.ui.VLazyExecutor;
 import com.vaadin.client.ui.VNotification;
 import com.vaadin.client.ui.VOverlay;
 import com.vaadin.client.ui.aria.AriaHelper;
-import com.vaadin.client.ui.window.WindowConnector;
 import com.vaadin.client.ui.window.WindowMoveEvent;
-import com.vaadin.client.ui.window.WindowMoveHandler;
 import com.vaadin.client.ui.window.WindowOrderEvent;
 import com.vaadin.client.ui.window.WindowOrderHandler;
 import com.vaadin.shared.Connector;
 import com.vaadin.shared.EventId;
-import com.vaadin.shared.ui.window.WindowMode;
 import com.vaadin.shared.ui.window.WindowRole;
-import java.util.logging.Level;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * "Sub window" component.
@@ -418,22 +412,22 @@ public class SubWindowWidget extends VOverlay implements ShortcutActionHandlerOw
         DOM.setElementProperty(contents, "className", CLASSNAME + "-contents");
         footer = DOM.createDiv();
         DOM.setElementProperty(footer, "className", CLASSNAME + "-footer");
-        resizeBox = DOM.createDiv();
-        DOM.setElementProperty(resizeBox, "className",
-                CLASSNAME + "-resizebox");
-        closeBox = DOM.createDiv();
         
-        maximizeRestoreBox = DOM.createDiv();
-        DOM.setElementProperty(maximizeRestoreBox, "className",
-                CLASSNAME + "-maximizebox");
+        resizeBox = DOM.createDiv();
+        DOM.setElementProperty(resizeBox, "className", CLASSNAME + "-resizebox");
         
         minimizeBox = DOM.createDiv();
-        DOM.setElementProperty(minimizeBox, "className",
-                CLASSNAME + "-minimizebox");
+        DOM.setElementProperty(minimizeBox, "className", CLASSNAME + "-minimizebox");
+        DOM.setElementAttribute(minimizeBox, "tabindex", "0");
         
+        maximizeRestoreBox = DOM.createDiv();
+        DOM.setElementProperty(maximizeRestoreBox, "className", CLASSNAME + "-maximizebox");
         DOM.setElementAttribute(maximizeRestoreBox, "tabindex", "0");
+        
+        closeBox = DOM.createDiv();
         DOM.setElementProperty(closeBox, "className", CLASSNAME + "-closebox");
         DOM.setElementAttribute(closeBox, "tabindex", "0");
+        
         DOM.appendChild(footer, resizeBox);
 
         bottomTabStop = DOM.createDiv();
@@ -462,10 +456,13 @@ public class SubWindowWidget extends VOverlay implements ShortcutActionHandlerOw
         Roles.getButtonRole().set(closeBox);
         Roles.getButtonRole().setAriaLabelProperty(closeBox, "close button");
 
+        // Make the closebox accessible for assistive devices
+        Roles.getButtonRole().set(minimizeBox);
+        Roles.getButtonRole().setAriaLabelProperty(minimizeBox, "minimize button");
+
         // Make the maximizebox accessible for assistive devices
         Roles.getButtonRole().set(maximizeRestoreBox);
-        Roles.getButtonRole().setAriaLabelProperty(maximizeRestoreBox,
-                "maximize button");
+        Roles.getButtonRole().setAriaLabelProperty(maximizeRestoreBox,"maximize button");
 
         // Provide the title to assistive devices
         AriaHelper.ensureHasId(headerText);
@@ -1036,6 +1033,12 @@ public class SubWindowWidget extends VOverlay implements ShortcutActionHandlerOw
                 onCloseClick();
             }
             bubble = false;
+        } else if (target == minimizeBox) {
+            // handled in connector
+            if (type != Event.ONCLICK) {
+                
+                bubble = false;
+            }
         } else if (target == maximizeRestoreBox) {
             // handled in connector
             if (type != Event.ONCLICK) {
@@ -1094,7 +1097,7 @@ public class SubWindowWidget extends VOverlay implements ShortcutActionHandlerOw
          */
         if ((type == Event.ONMOUSEDOWN || type == Event.ONTOUCHSTART)
                 && !contentPanel.getElement().isOrHasChild(target)
-                && target != closeBox && target != maximizeRestoreBox) {
+                && target != closeBox && target != maximizeRestoreBox && target != minimizeBox) {
             contentPanel.focus();
         }
 

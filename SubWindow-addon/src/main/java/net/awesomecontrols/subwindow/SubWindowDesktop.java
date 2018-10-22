@@ -17,25 +17,18 @@
 package net.awesomecontrols.subwindow;
 
 import com.vaadin.ui.Button;
-import net.awesomecontrols.subwindow.client.SubWindowDesktopState;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Composite;
-import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.VerticalSplitPanel;
-import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import net.awesomecontrols.subwindow.client.SubWindowDesktopState;
+import net.awesomecontrols.subwindow.client.SubWindowMode;
 
 /**
  *
@@ -95,6 +88,7 @@ public class SubWindowDesktop extends Composite implements SubWindow.CloseListen
         wButton.addClickListener((event) -> {
             SubWindow swd = (SubWindow)event.getButton().getData();
             swd.setVisible(true);
+            swd.setWindowMode(SubWindowMode.NORMAL);
             swd.bringToFront();
         });
         

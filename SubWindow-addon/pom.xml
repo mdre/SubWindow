@@ -4,7 +4,7 @@
     <groupId>com.github.mdre</groupId>
     <artifactId>subwindow</artifactId>
     <packaging>jar</packaging>
-    <version>0.3.15</version>
+    <version>0.4.0</version>
     <name>SubWindow - SubWindow Add-on</name>
 
     <prerequisites>
@@ -125,7 +125,7 @@
                             <Vaadin-Package-Version>1</Vaadin-Package-Version>
                             <Vaadin-License-Title>${Vaadin-License-Title}</Vaadin-License-Title>
                             <Vaadin-Widgetsets>net.awesomecontrols.subwindow.WidgetSet</Vaadin-Widgetsets>
-                            <Vaadin-Stylesheets>VAADIN/themes/subwindow/styles.scss</Vaadin-Stylesheets>
+                            <Vaadin-Stylesheets>VAADIN/addons/subwindow/subwindow.scss</Vaadin-Stylesheets>
                         </manifestEntries>
                     </archive>
                 </configuration>

@@ -150,6 +150,7 @@ $v-subwindow-modality-curtain-background-color: #222 !default;
     }
 
     //Adjust header margin according to visible buttons on header
+    .#{$primary-stylename}-minimizebox-disabled,
     .#{$primary-stylename}-restorebox-disabled,
     .#{$primary-stylename}-maximizebox-disabled {
         ~ .#{$primary-stylename}-closebox ~ .#{$primary-stylename}-header {
@@ -243,7 +244,6 @@ $v-subwindow-modality-curtain-background-color: #222 !default;
     }
 
     .#{$primary-stylename}-maximizebox,
-    .#{$primary-stylename}-minimizebox,
     .#{$primary-stylename}-restorebox {
         right: $v-unit-size - round($v-unit-size/9);
         padding-left: round($v-unit-size/9);
@@ -257,6 +257,19 @@ $v-subwindow-modality-curtain-background-color: #222 !default;
         }
     }
 
+    .#{$primary-stylename}-minimizebox {
+        right: ($v-unit-size - round($v-unit-size/9))*2;
+        padding-left: round($v-unit-size/9);
+
+        @if $v-subwindow-border-radius > 0 {
+            border-radius: 0 0 0 $v-subwindow-border-radius;
+
+            + .#{$primary-stylename}-closebox {
+                border-bottom-left-radius: 0;
+            }
+        }
+    }
+    
     .#{$primary-stylename}-closebox-disabled,
     .#{$primary-stylename}-resizebox-disabled,
     .#{$primary-stylename}-minimizebox-disabled,

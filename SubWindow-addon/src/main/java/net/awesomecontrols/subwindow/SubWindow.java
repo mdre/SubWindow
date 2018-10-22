@@ -1,17 +1,5 @@
 package net.awesomecontrols.subwindow;
 
-import java.io.Serializable;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-
 import com.vaadin.event.ConnectorEventListener;
 import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.BlurListener;
@@ -33,7 +21,6 @@ import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.window.WindowRole;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.HasComponents;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.UI;
@@ -41,11 +28,21 @@ import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
 import com.vaadin.ui.declarative.DesignException;
 import com.vaadin.util.ReflectTools;
+import java.io.Serializable;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import net.awesomecontrols.subwindow.client.SubWindowMode;
 import net.awesomecontrols.subwindow.client.SubWindowServerRpc;
 import net.awesomecontrols.subwindow.client.SubWindowState;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 /**
  * A component that represents a floating popup window that can be added to a {@link WindowsDesktopArea}. A subwindow is added to a
@@ -372,6 +369,46 @@ public class SubWindow extends Panel
         }
     }
 
+    
+    
+    
+    private static final Method WINDOW_MINIMIZE_METHOD;
+
+    static {
+        try {
+            WINDOW_MINIMIZE_METHOD = MinimizeListener.class
+                    .getDeclaredMethod("windowMinimize", MinimizeEvent.class);
+        } catch (final NoSuchMethodException e) {
+            // This should never happen
+            throw new RuntimeException(
+                    "Internal error, window minimize method not found");
+        }
+    }
+
+    /**
+     *
+     */
+    public static class MinimizeEvent extends Component.Event {
+
+        /**
+         *
+         * @param source source
+         */
+        public MinimizeEvent(Component source) {
+            super(source);
+        }
+
+        /**
+         * Gets the Window.
+         *
+         * @return the subwindow.
+         */
+        public SubWindow getWindow() {
+            return (SubWindow) getSource();
+        }
+    }
+    
+    
     /**
      * Event which is fired when the subwindow order position is changed.
      *
@@ -486,6 +523,7 @@ public class SubWindow extends Panel
          */
         public void windowClose(CloseEvent e);
     }
+    
 
     /**
      * Adds a CloseListener to the subwindow.
@@ -529,6 +567,67 @@ public class SubWindow extends Panel
         fireEvent(new SubWindow.CloseEvent(this));
     }
 
+    
+    //=====================================================
+    @FunctionalInterface
+    public interface MinimizeListener extends Serializable {
+
+        /**
+         * Called when the user minimize a subwindow. Use {@link MinimizeEvent#getWindow()} to get a reference to the {@link SubWindow} that was minimized.
+         *
+         * @param e The triggered event
+         */
+        public void windowMinimize(MinimizeEvent e);
+    }
+    
+    
+    /**
+     * Adds a MinimizeListener to the subwindow.
+     *
+     * For a subwindow the CloseListener is fired when the user closes it (clicks on the close button).
+     *
+     * For a browser level subwindow the CloseListener is fired when the browser level subwindow is closed. Note that closing a browser level
+     * subwindow does not mean it will be destroyed. Also note that Opera does not send events like all other browsers and therefore the close
+     * listener might not be called if Opera is used.
+     *
+     * <p>
+     * Since Vaadin 6.5, removing subwindows using #removeWindow(SubWindow) does fire the CloseListener.
+     * </p>
+     *
+     * @param listener the CloseListener to add, not null
+     * @return Registration
+     * @since 8.0
+     */
+    public Registration addMinimizeListener(MinimizeListener listener) {
+        return addListener(MinimizeEvent.class, listener, WINDOW_MINIMIZE_METHOD);
+    }
+
+    /**
+     * Removes the MinimizeListener from the subwindow.
+     *
+     * <p>
+     * For more information on MinimizeListeners see {@link MinimizeListener}.
+     * </p>
+     *
+     * @param listener the MinimizeListener to remove.
+     */
+    @Deprecated
+    public void removeMinimizeListener(MinimizeListener listener) {
+        removeListener(MinimizeEvent.class, listener, WINDOW_MINIMIZE_METHOD);
+    }
+
+    /**
+     *
+     */
+    protected void fireMinimize() {
+        fireEvent(new SubWindow.MinimizeEvent(this));
+    }
+    
+    
+    
+    
+    //=====================================================
+    
     /**
      * Event which is fired when the mode of the Window changes.
      *
@@ -625,8 +724,7 @@ public class SubWindow extends Panel
      *
      */
     protected void fireWindowWindowModeChange() {
-        fireEvent(
-                new SubWindow.WindowModeChangeEvent(this, getState().windowMode));
+        fireEvent(new SubWindow.WindowModeChangeEvent(this, getState().windowMode));
     }
 
     /**

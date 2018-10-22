@@ -70,8 +70,8 @@
 	<dependencies>
 		<dependency>
 			<groupId>com.github.mdre</groupId>
-			<artifactId>SubWindow</artifactId>
-			<version>0.3.8-SNAPSHOT</version>
+			<artifactId>subwindow</artifactId>
+			<version>0.4.0</version>
 		</dependency>
 		<dependency>
 			<groupId>com.vaadin</groupId>

@@ -1,7 +1,5 @@
 package net.awesomecontrols.subwindow.client;
 
-import net.awesomecontrols.subwindow.SubWindow;
-
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
@@ -27,13 +25,13 @@ import com.vaadin.client.ui.ClickEventHandler;
 import com.vaadin.client.ui.PostLayoutListener;
 import com.vaadin.client.ui.ShortcutActionHandler;
 import com.vaadin.client.ui.SimpleManagedLayout;
-import com.vaadin.client.ui.VNotification;
 import com.vaadin.client.ui.VWindow;
 import com.vaadin.client.ui.layout.MayScrollChildren;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.window.WindowServerRpc;
 import java.util.logging.Logger;
+import net.awesomecontrols.subwindow.SubWindow;
 
 // Connector binds client-side widget class to server-side component class
 // Connector lives in the client and the @Connect annotation specifies the
@@ -163,8 +161,8 @@ public class SubWindowConnector extends AbstractSingleComponentContainerConnecto
         // Workaround needed for Testing Tools (GWT generates window DOM
         // slightly different in different browsers).
         window.closeBox.setId(connectorId + "_window_close");
-        window.maximizeRestoreBox
-                .setId(connectorId + "_window_maximizerestore");
+        window.maximizeRestoreBox.setId(connectorId + "_window_maximizerestore");
+        window.minimizeBox.setId(connectorId + "_window_minimize");
 
         window.visibilityChangesDisabled = true;
         if (!isRealUpdate(uidl)) {
@@ -433,9 +431,13 @@ public class SubWindowConnector extends AbstractSingleComponentContainerConnecto
         if (window.centered && getState().windowMode != SubWindowMode.MAXIMIZED) {
             Scheduler.get().scheduleFinally(() -> getWidget().center());
         }
-        window.setVisible(true);
-        if (this.getState().forceBringToFront > 0) {
-            window.bringToFront();
+        if (getState().windowMode == SubWindowMode.MINIMIZED) {
+            window.setVisible(false);
+        } else {
+            window.setVisible(true);
+            if (this.getState().forceBringToFront > 0) {
+                window.bringToFront();
+            }
         }
     }
 
@@ -513,13 +515,13 @@ public class SubWindowConnector extends AbstractSingleComponentContainerConnecto
     protected void onMinimize() {
         SubWindowState state = getState();
         if (state.resizable) {
-            state.windowMode = SubWindowMode.HIDDEN;
+            state.windowMode = SubWindowMode.MINIMIZED;
             
             updateWindowMode();
 
             SubWindowWidget window = getWidget();
-            window.bringToFront();
-
+//            window.bringToFront();
+            
             getRpcProxy(SubWindowServerRpc.class)
                     .windowModeChanged(state.windowMode);
         }

@@ -84,6 +84,13 @@ public class SubWindow extends Panel
         }
 
         @Override
+        public void windowModeChanged(SubWindowMode lastState, SubWindowMode newState) {
+            getState().minimizeLast = lastState;
+            setWindowMode(newState);
+        }
+
+        
+        @Override
         public void windowMoved(int x, int y) {
             if (x != getState(false).positionX) {
                 setPositionX(x);
@@ -858,6 +865,16 @@ public class SubWindow extends Panel
 
     }
 
+    /**
+     * Revert the minimize state
+     */
+    public void unMinimize() {
+        this.setVisible(true);
+        this.setWindowMode(getState().minimizeLast);
+//        this.setCaption(this.getCaption()+" > "+getState().minimizeLast);
+        this.bringToFront();
+    }
+    
     /**
      * Sets subwindow modality. When a modal subwindow is open, components outside that subwindow cannot be accessed.
      * <p>

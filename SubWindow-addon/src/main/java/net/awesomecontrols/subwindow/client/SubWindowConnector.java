@@ -515,15 +515,17 @@ public class SubWindowConnector extends AbstractSingleComponentContainerConnecto
     protected void onMinimize() {
         SubWindowState state = getState();
         if (state.resizable) {
+            state.minimizeLast = state.windowMode;
             state.windowMode = SubWindowMode.MINIMIZED;
             
             updateWindowMode();
 
             SubWindowWidget window = getWidget();
+//            window.setCaption(window.getTitle()+">"+state.minimizeLast);
 //            window.bringToFront();
             
             getRpcProxy(SubWindowServerRpc.class)
-                    .windowModeChanged(state.windowMode);
+                    .windowModeChanged(state.minimizeLast,state.windowMode);
         }
     }
 

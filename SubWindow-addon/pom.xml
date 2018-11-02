@@ -4,7 +4,7 @@
     <groupId>com.github.mdre</groupId>
     <artifactId>subwindow</artifactId>
     <packaging>jar</packaging>
-    <version>0.4.0</version>
+    <version>0.4.2</version>
     <name>SubWindow - SubWindow Add-on</name>
 
     <prerequisites>

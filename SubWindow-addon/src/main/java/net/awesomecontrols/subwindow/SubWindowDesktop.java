@@ -28,7 +28,6 @@ import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import net.awesomecontrols.subwindow.client.SubWindowDesktopState;
-import net.awesomecontrols.subwindow.client.SubWindowMode;
 
 /**
  *
@@ -87,11 +86,15 @@ public class SubWindowDesktop extends Composite implements SubWindow.CloseListen
         wButton.addStyleName(ValoTheme.BUTTON_TINY);
         wButton.addClickListener((event) -> {
             SubWindow swd = (SubWindow)event.getButton().getData();
-            swd.setVisible(true);
-            swd.setWindowMode(SubWindowMode.NORMAL);
-            swd.bringToFront();
+            swd.unMinimize();
         });
         
+//        sw.addWindowOrderChangeListener(new SubWindow.WindowOrderChangeListener() {
+//            @Override
+//            public void windowOrderChanged(SubWindow.WindowOrderChangeEvent event) {
+//                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+//            }
+//        });
         
         this.openedWindowsBar.addComponent(wButton);
         sw.addCloseListener(this);

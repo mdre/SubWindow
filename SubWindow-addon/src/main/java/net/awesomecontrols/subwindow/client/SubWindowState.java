@@ -18,12 +18,8 @@ package net.awesomecontrols.subwindow.client;
 
 import com.vaadin.shared.Connector;
 import com.vaadin.shared.annotations.NoLayout;
-import com.vaadin.shared.ui.composite.CompositeState;
 import com.vaadin.shared.ui.panel.PanelState;
-import com.vaadin.shared.ui.window.WindowMode;
 import com.vaadin.shared.ui.window.WindowRole;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -86,7 +82,10 @@ public class SubWindowState extends PanelState {
      *
      */
     public SubWindowMode windowMode = SubWindowMode.NORMAL;
-
+    /**
+     * 
+     */
+    public SubWindowMode minimizeLast = SubWindowMode.NORMAL;
     /**
      *
      */

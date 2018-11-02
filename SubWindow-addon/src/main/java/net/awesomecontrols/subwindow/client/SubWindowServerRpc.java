@@ -19,6 +19,13 @@ public interface SubWindowServerRpc extends ClickRpc, ServerRpc {
 
     /**
      *
+     * @param lastState
+     * @param newState
+     */
+    public void windowModeChanged(SubWindowMode lastState, SubWindowMode newState);
+
+    /**
+     *
      * @param x int
      * @param y int
      */
